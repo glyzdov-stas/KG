@@ -10,31 +10,32 @@ import java.util.ArrayList;
 public class ImageEdit
 {
     // Режим рисования 
-    int             rezhim    = 0;
-    int             xPad;
-    int             xf;
-    int             yf;
-    int             yPad;
-    int             gridWidth = 30;
-    boolean         pressed   = false;
-    long startTime, endTime;
+    int     rezhim                   = 0;
+    int     xPad;
+    int     xf;
+    int     yf;
+    int     yPad;
+    int     gridWidth                = 30;
+    boolean pressed                  = false;
+    long    startTime, endTime, SbSt = 0, DDAt = 0, Brt = 0;
     // текущий цвет
     Color           maincolor;
     MyFrame         f;
     MyPanel         japan;
     BufferedImage   imag;
-    ArrayList<Pair> beginLSbS = new ArrayList<Pair>();
-    ArrayList<Pair> endLSbS   = new ArrayList<Pair>();
-    ArrayList<Pair> beginLDDA = new ArrayList<Pair>();
-    ArrayList<Pair> endLDDA   = new ArrayList<Pair>();
-    ArrayList<Pair> beginLBr  = new ArrayList<Pair>();
-    ArrayList<Pair> endLBr    = new ArrayList<Pair>();
-    ArrayList<Pair> beginE    = new ArrayList<Pair>();
-    ArrayList<Pair> endE      = new ArrayList<Pair>();
+    ArrayList<Pair> beginLSbS = new ArrayList<>();
+    ArrayList<Pair> endLSbS   = new ArrayList<>();
+    ArrayList<Pair> beginLDDA = new ArrayList<>();
+    ArrayList<Pair> endLDDA   = new ArrayList<>();
+    ArrayList<Pair> beginLBr  = new ArrayList<>();
+    ArrayList<Pair> endLBr    = new ArrayList<>();
+    ArrayList<Pair> beginE    = new ArrayList<>();
+    ArrayList<Pair> endE      = new ArrayList<>();
     int             width, height;
 
     public ImageEdit()
     {
+        var instance = this;
         f = new MyFrame("Графический редактор");
         f.setSize(350, 350);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,6 +87,145 @@ public class ImageEdit
 
         JMenuItem widthMenu = new JMenuItem(gridAction);
         gridMenu.add(widthMenu);
+
+        JMenu lineMenu = new JMenu("Линия");
+        menuBar.add(lineMenu);
+
+        Action SbSAction = new AbstractAction("Пошаговая")
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                try
+                {
+                    String input = JOptionPane.showInputDialog("Введите x1 y1 x2 y2:");
+
+                    if (input != null && !input.isEmpty())
+                    {
+                        String[] numbers = input.split(" ");
+                        if (numbers.length == 4)
+                        {
+                            int x1 = Integer.parseInt(numbers[0]);
+                            int y1 = Integer.parseInt(numbers[1]);
+                            int x2 = Integer.parseInt(numbers[2]);
+                            int y2 = Integer.parseInt(numbers[3]);
+
+                            beginLSbS.add(new Pair((double) x1 / width * gridWidth, (double) y1 / height * gridWidth));
+                            endLSbS.add(new Pair((double) x2 / width * gridWidth, (double) y2 / height * gridWidth));
+
+                            drawLineSbS((Graphics2D) imag.getGraphics(), x1, y1, x2, y2, true);
+
+                            startTime = System.nanoTime();
+                            drawLineSbS((Graphics2D) imag.getGraphics(), x1 * gridWidth, y1 * gridWidth,
+                                        x2 * gridWidth, y2 * gridWidth, false);
+                            endTime = System.nanoTime();
+                            SbSt    = endTime - startTime;
+                            japan.repaint();
+                        }
+                    }
+                } catch (Exception ignored)
+                {
+                }
+            }
+        };
+
+        Action DDAAction = new AbstractAction("ЦДА")
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                try
+                {
+                    String input = JOptionPane.showInputDialog("Введите x1 y1 x2 y2:");
+
+                    if (input != null && !input.isEmpty())
+                    {
+                        String[] numbers = input.split(" ");
+                        if (numbers.length == 4)
+                        {
+                            int x1 = Integer.parseInt(numbers[0]);
+                            int y1 = Integer.parseInt(numbers[1]);
+                            int x2 = Integer.parseInt(numbers[2]);
+                            int y2 = Integer.parseInt(numbers[3]);
+
+                            beginLDDA.add(new Pair((double) x1 / width * gridWidth, (double) y1 / height * gridWidth));
+                            endLDDA.add(new Pair((double) x2 / width * gridWidth, (double) y2 / height * gridWidth));
+
+                            drawLineDDA((Graphics2D) imag.getGraphics(), x1, y1, x2, y2, true);
+
+                            startTime = System.nanoTime();
+                            drawLineDDA((Graphics2D) imag.getGraphics(), x1 * gridWidth, y1 * gridWidth,
+                                        x2 * gridWidth, y2 * gridWidth, false);
+                            endTime = System.nanoTime();
+                            DDAt    = endTime - startTime;
+                            japan.repaint();
+                        }
+                    }
+                } catch (Exception ignored)
+                {
+                }
+            }
+        };
+
+        Action BrAction = new AbstractAction("Брезенхем")
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                try
+                {
+                    String input = JOptionPane.showInputDialog("Введите x1 y1 x2 y2:");
+
+                    if (input != null && !input.isEmpty())
+                    {
+                        String[] numbers = input.split(" ");
+                        if (numbers.length == 4)
+                        {
+                            int x1 = Integer.parseInt(numbers[0]);
+                            int y1 = Integer.parseInt(numbers[1]);
+                            int x2 = Integer.parseInt(numbers[2]);
+                            int y2 = Integer.parseInt(numbers[3]);
+
+                            beginLBr.add(new Pair((double) x1 / width * gridWidth, (double) y1 / height * gridWidth));
+                            endLBr.add(new Pair((double) x2 / width * gridWidth, (double) y2 / height * gridWidth));
+
+                            drawLineBr((Graphics2D) imag.getGraphics(), x1, y1, x2, y2, true);
+
+                            startTime = System.nanoTime();
+                            drawLineBr((Graphics2D) imag.getGraphics(), x1 * gridWidth, y1 * gridWidth,
+                                       x2 * gridWidth, y2 * gridWidth, false);
+                            endTime = System.nanoTime();
+                            Brt     = endTime - startTime;
+                            japan.repaint();
+                        }
+                    }
+                } catch (Exception ignored)
+                {
+                }
+            }
+        };
+
+        Action timeAction = new AbstractAction("Время")
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                try
+                {
+                    JOptionPane.showMessageDialog(null, "Пошаговый метод: " + SbSt + " ns\n" +
+                                                        "Метод ЦДА: " + DDAt + " ns\n" +
+                                                        "Метод Брезенхема: " + Brt + " ns");
+                } catch (Exception ignored)
+                {
+                }
+            }
+        };
+
+        JMenuItem SbSMenu  = new JMenuItem(SbSAction);
+        JMenuItem DDAMenu  = new JMenuItem(DDAAction);
+        JMenuItem BrMenu   = new JMenuItem(BrAction);
+        JMenuItem TimeMenu = new JMenuItem(timeAction);
+
+        lineMenu.add(SbSMenu);
+        lineMenu.add(DDAMenu);
+        lineMenu.add(BrMenu);
+        lineMenu.add(TimeMenu);
 
         japan = new MyPanel();
         japan.setBounds(30, 30, 260, 260);
@@ -250,10 +390,7 @@ public class ImageEdit
 
                         drawLineSbS(g2, xf / gridWidth, yf / gridWidth,
                                     e.getX() / gridWidth, e.getY() / gridWidth, true);
-                        startTime = System.nanoTime();
                         drawLineSbS(g2, xf, yf, e.getX(), e.getY(), false);
-                        endTime = System.nanoTime();
-                        System.out.println("Step by step time " + (endTime - startTime) + "ns");
                         break;
                     // линия DDA
                     case 3:
@@ -262,10 +399,7 @@ public class ImageEdit
                         drawLineDDA(g2, xf / gridWidth, yf / gridWidth,
                                     e.getX() / gridWidth, e.getY() / gridWidth, true);
 
-                        startTime = System.nanoTime();
                         drawLineDDA(g2, xf, yf, e.getX(), e.getY(), false);
-                        endTime = System.nanoTime();
-                        System.out.println("DDA time " + (endTime - startTime) + "ns");
                         break;
                     // линия Brezenhem
                     case 4:
@@ -274,10 +408,7 @@ public class ImageEdit
                         drawLineBr(g2, xf / gridWidth, yf / gridWidth,
                                    e.getX() / gridWidth, e.getY() / gridWidth, true);
 
-                        startTime = System.nanoTime();
                         drawLineBr(g2, xf, yf, e.getX(), e.getY(), false);
-                        endTime = System.nanoTime();
-                        System.out.println("Brezenhem time " + (endTime - startTime) + "ns");
                         break;
                     // круг
                     case 5:
@@ -286,10 +417,7 @@ public class ImageEdit
                         drawCircleBr(g2, xf / gridWidth, yf / gridWidth,
                                      e.getX() / gridWidth, e.getY() / gridWidth, true);
 
-                        startTime = System.nanoTime();
                         drawCircleBr(g2, xf, yf, e.getX(), e.getY(), false);
-                        endTime = System.nanoTime();
-                        System.out.println("Brezenhem circle time " + (endTime - startTime) + "ns");
                         break;
                 }
                 xf      = 0;
@@ -336,6 +464,12 @@ public class ImageEdit
 
     public void drawLineSbS(Graphics2D g2, int x1, int y1, int x2, int y2, boolean bigD)
     {
+        if (x1 == x2 && y1 == y2)
+        {
+            pixel(g2, x2, y2, bigD);
+            return;
+        }
+
         int dx = x2 - x1;
         int dy = y2 - y1;
 
@@ -525,6 +659,18 @@ public class ImageEdit
         {
             g2.drawLine(0, y, width, y);
         }
+
+        g2.setColor(Color.red);
+        g2.setStroke(new BasicStroke(3.0f));
+
+        g2.drawLine(0, 0, width, 0);
+        g2.drawLine(width - 15, 10, width - 5, 0);
+
+        g2.drawLine(0, 0, 0, height);
+        g2.drawLine(10, height - 20, 0, height - 10);
+
+        g2.setStroke(new BasicStroke(1.0f));
+        g2.setColor(Color.black);
     }
 
     public void clearArrays()
