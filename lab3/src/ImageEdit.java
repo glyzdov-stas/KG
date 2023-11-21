@@ -669,6 +669,27 @@ public class ImageEdit
         g2.drawLine(0, 0, 0, height);
         g2.drawLine(10, height - 20, 0, height - 10);
 
+        int tickSpacingX = width / 4;
+        for (int i = 1; i < 4; i++)
+        {
+            int x     = (i * tickSpacingX / gridWidth) * gridWidth;
+            int label = x / gridWidth;
+            g2.drawLine(x, 0, x, 5);
+            g2.drawString(Integer.toString(label), x + gridWidth / 3, 20);
+        }
+
+        int tickSpacingY = height / 4;
+        for (int i = 1; i < 4; i++)
+        {
+            int y     = (i * tickSpacingY / gridWidth) * gridWidth;
+            int label = y / gridWidth;
+            g2.drawLine(0, y, 5, y);
+            g2.drawString(Integer.toString(label), 10, y + gridWidth / 3);
+        }
+
+        g2.drawString("X", width - 20, 20);
+        g2.drawString("Y", 10, height - 30);
+
         g2.setStroke(new BasicStroke(1.0f));
         g2.setColor(Color.black);
     }
